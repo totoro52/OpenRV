@@ -588,7 +588,7 @@ jobs:
 
           
   release:
-    needs: build
+    needs: windows
     runs-on: ubuntu-latest
 
     steps:
