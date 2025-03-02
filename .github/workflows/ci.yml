@@ -39,7 +39,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: "self-hosted"
+          - os: "windows-2022"
             arch-type: "x86_64"
             build-type: "Release"
             qt-version: "5.15.2"
@@ -229,12 +229,6 @@ jobs:
           cmake --install _build --prefix $(pwd)/_install --config ${{ matrix.build-type }}
         shell: msys2 {0}
         
-      - name: Archive production artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-artifacts
-          path: $(pwd)/_install
-      
       - name: Zip build artifacts
         run: |
           cd $(pwd)/_install
@@ -242,11 +236,11 @@ jobs:
           cd ..
         shell: msys2 {0}
 
-      - name: Upload zipped build artifacts
+      - name: Archive production artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: build-artifacts-zip
-          path: $(pwd)/_install/build-artifacts.zip
+          name: build-artifacts
+          path: $(pwd)/_install
 
           
   release:
@@ -278,6 +272,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: $(pwd)/_install/build-artifacts.zip
+          asset_path: _install/build-artifacts.zip
           asset_name: build-artifacts.zip
           asset_content_type: application/zip
